@@ -268,7 +268,7 @@ let handleTime = setInterval(() => {
             return false
         }
         if(check(time/10)) {
-            state.speed=state.speed+2
+            state.speed=state.speed+1
         }
         time=time+1;
         document.querySelector('.time').innerHTML=time
