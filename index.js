@@ -8,9 +8,10 @@ let score = 0;
 let isHolding = false; 
 let time = 0
 let gameover = false
+let fallInterval = null
 const state = {
     basketX:0,
-    speed:1,
+    speed:0,
 }
 // Bắt sự kiện di chuyển chuột để di chuyển rổ
 document.addEventListener("mousemove", (e) => {
@@ -80,7 +81,6 @@ function checkCollisionBoom() {
             boomLeft <= basketRight
         ) {
             // Trứng va chạm vào cái giỏ
-            
             gameover=true
             basket.remove()
             scoreLayout.remove()
@@ -98,27 +98,93 @@ function createEgg() {
     egg.src = "./chanh.png"
     egg.style.left = `${Math.random() * (gameContainer.clientWidth - 30)}px`;
     gameContainer.appendChild(egg);
-    const fallInterval = setInterval(() => {
+    fallInterval = setInterval(() => {
         const eggY = egg.getBoundingClientRect().top;
         const basketY = basket.getBoundingClientRect().top;
         if (eggY > basketY && eggY < basketY + basket.clientHeight) {
-            
             document.querySelector('.score').innerText = `Score: ${score}`;
-            egg.remove();
+            // egg.remove();
             clearInterval(fallInterval);
         } else if (eggY >= gameContainer.clientHeight) {
-            egg.remove();
-            clearInterval(fallInterval);
+            // egg.remove();
         } else {
-            newY = eggY+30*(state.speed/2)
+            newY = eggY + 30 * (state.speed / 2)
             egg.style.top = `${newY}px`;
         }
-
-        // Kiểm tra va chạm sau mỗi khung thời gian
         checkCollisionEgg();
     }, 20);
+
+    // Gọi hàm createEgg lại sau một khoảng thời gian
+    setTimeout(createEgg,state.speed==0?4000:4000/state.speed);
 }
+setInterval(() => {
+    if(gameover==true) {
+        document.querySelectorAll(".egg").forEach(item=>{
+            item.style.animation="none"
+            item.style.zIndex=-1
+            item.remove()
+        })
+        document.querySelectorAll(".boom").forEach(item=>{
+            item.remove()
+        })
+        clearInterval(fallInterval)
+    }
+}, 20);
 function createBoom() {
+    const boom = document.createElement('img');
+    boom.classList.add('boom');
+    boom.src = "./boom.png"
+    boom.style.left = `${Math.random() * (gameContainer.clientWidth - 30)}px`;
+    gameContainer.appendChild(boom);
+    fallInterval = setInterval(() => {
+        const boomY = boom.getBoundingClientRect().top;
+        const basketY = basket.getBoundingClientRect().top;
+        if (boomY > basketY && boomY < basketY + basket.clientHeight) {
+            
+            document.querySelector('.score').innerText = `Score: ${score}`;
+            boom.remove();
+            clearInterval(fallInterval);
+        } else if (boomY > gameContainer.clientHeight) {
+            boom.remove();
+        } else {
+            newY = boomY+30*(state.speed/2)
+            boom.style.top = `${newY}px`;
+        }
+        // Kiểm tra va chạm sau mỗi khung thời gian
+        const basketRect = basket.getBoundingClientRect();
+        const basketLeft = basketRect.left;
+        const basketRight = basketRect.right;
+        const basketTop = basketRect.top;
+        const basketBottom = basketRect.bottom;
+
+        const booms = document.querySelectorAll('.boom');
+        booms.forEach((boom) => {
+            const boomRect = boom.getBoundingClientRect();
+            const boomLeft = boomRect.left;
+            const boomRight = boomRect.right;
+            const boomTop = boomRect.top;
+            const boomBottom = boomRect.bottom;
+            if (
+                boomBottom >= basketTop &&
+                boomTop <= basketBottom &&
+                boomRight >= basketLeft &&
+                boomLeft <= basketRight
+            ) {
+                // Trứng va chạm vào cái giỏ
+                gameover=true
+                basket.remove()
+                scoreLayout.remove()
+                timeLayout.remove()
+                document.querySelector('.gameOver').style.display = "block"
+            } else if (boomTop > gameContainer.clientHeight) {
+                // Trứng rơi xuống dưới màn hình, loại bỏ nó
+                boom.remove();
+            }
+        });
+    }, 20);
+    setTimeout(createBoom, state.speed==0?8000:8000/state.speed);
+}
+function createBoom2() {
     const boom = document.createElement('img');
     boom.classList.add('boom');
     boom.src = "./boom.png"
@@ -134,15 +200,43 @@ function createBoom() {
             clearInterval(fallInterval);
         } else if (boomY > gameContainer.clientHeight) {
             boom.remove();
-            clearInterval(fallInterval);
         } else {
             newY = boomY+30*(state.speed/2)
             boom.style.top = `${newY}px`;
         }
         // Kiểm tra va chạm sau mỗi khung thời gian
-        checkCollisionBoom();
-    }, 20);
+        const basketRect = basket.getBoundingClientRect();
+        const basketLeft = basketRect.left;
+        const basketRight = basketRect.right;
+        const basketTop = basketRect.top;
+        const basketBottom = basketRect.bottom;
 
+        const booms = document.querySelectorAll('.boom');
+        booms.forEach((boom) => {
+            const boomRect = boom.getBoundingClientRect();
+            const boomLeft = boomRect.left;
+            const boomRight = boomRect.right;
+            const boomTop = boomRect.top;
+            const boomBottom = boomRect.bottom;
+            if (
+                boomBottom >= basketTop &&
+                boomTop <= basketBottom &&
+                boomRight >= basketLeft &&
+                boomLeft <= basketRight
+            ) {
+                // Trứng va chạm vào cái giỏ
+                gameover=true
+                basket.remove()
+                scoreLayout.remove()
+                timeLayout.remove()
+                document.querySelector('.gameOver').style.display = "block"
+            } else if (boomTop > gameContainer.clientHeight) {
+                // Trứng rơi xuống dưới màn hình, loại bỏ nó
+                boom.remove();
+            }
+        });
+    }, 20);
+    setTimeout(createBoom, state.speed==0?9500:9500/state.speed);
 }
 
 // Đặt lại vị trí của quả trứng
@@ -174,20 +268,20 @@ let handleTime = setInterval(() => {
             return false
         }
         if(check(time/10)) {
-            state.speed=state.speed+1
+            state.speed=state.speed+2
         }
         time=time+1;
         document.querySelector('.time').innerHTML=time
     }
-}, 1000);
-let mainInterval = setInterval(() => {
-    if(gameover==false) {
-        let handleMainEgg = setInterval(createEgg, 2000);
-        let handleMainBoom = setInterval(createBoom, 5500);
+    else {
+        eggs.forEach((item)=>{item.remove()})
     }
-    console.log(state.speed);
-}, 8000/state.speed);
-
+}, 1000);
+    // let handleMainEgg = setInterval(createEgg, state.speed==0?4000:4000/state.speed);
+    createEgg()
+    // let handleMainBoom = setInterval(createBoom, state.speed==0?8000:8000/state.speed);
+    createBoom()
+    createBoom2()   
 function handlereturn() {
     location.reload()
 }
