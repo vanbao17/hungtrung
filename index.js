@@ -151,92 +151,9 @@ function createBoom() {
             boom.style.top = `${newY}px`;
         }
         // Kiểm tra va chạm sau mỗi khung thời gian
-        const basketRect = basket.getBoundingClientRect();
-        const basketLeft = basketRect.left;
-        const basketRight = basketRect.right;
-        const basketTop = basketRect.top;
-        const basketBottom = basketRect.bottom;
-
-        const booms = document.querySelectorAll('.boom');
-        booms.forEach((boom) => {
-            const boomRect = boom.getBoundingClientRect();
-            const boomLeft = boomRect.left;
-            const boomRight = boomRect.right;
-            const boomTop = boomRect.top;
-            const boomBottom = boomRect.bottom;
-            if (
-                boomBottom >= basketTop &&
-                boomTop <= basketBottom &&
-                boomRight >= basketLeft &&
-                boomLeft <= basketRight
-            ) {
-                // Trứng va chạm vào cái giỏ
-                gameover=true
-                basket.remove()
-                scoreLayout.remove()
-                timeLayout.remove()
-                document.querySelector('.gameOver').style.display = "block"
-            } else if (boomTop > gameContainer.clientHeight) {
-                // Trứng rơi xuống dưới màn hình, loại bỏ nó
-                boom.remove();
-            }
-        });
+        checkCollisionBoom();
     }, 20);
     setTimeout(createBoom, state.speed==0?8000:8000/state.speed);
-}
-function createBoom2() {
-    const boom = document.createElement('img');
-    boom.classList.add('boom');
-    boom.src = "./boom.png"
-    boom.style.left = `${Math.random() * (gameContainer.clientWidth - 30)}px`;
-    gameContainer.appendChild(boom);
-    const fallInterval = setInterval(() => {
-        const boomY = boom.getBoundingClientRect().top;
-        const basketY = basket.getBoundingClientRect().top;
-        if (boomY > basketY && boomY < basketY + basket.clientHeight) {
-            
-            document.querySelector('.score').innerText = `Score: ${score}`;
-            boom.remove();
-            clearInterval(fallInterval);
-        } else if (boomY > gameContainer.clientHeight) {
-            boom.remove();
-        } else {
-            newY = boomY+30*(state.speed/2)
-            boom.style.top = `${newY}px`;
-        }
-        // Kiểm tra va chạm sau mỗi khung thời gian
-        const basketRect = basket.getBoundingClientRect();
-        const basketLeft = basketRect.left;
-        const basketRight = basketRect.right;
-        const basketTop = basketRect.top;
-        const basketBottom = basketRect.bottom;
-
-        const booms = document.querySelectorAll('.boom');
-        booms.forEach((boom) => {
-            const boomRect = boom.getBoundingClientRect();
-            const boomLeft = boomRect.left;
-            const boomRight = boomRect.right;
-            const boomTop = boomRect.top;
-            const boomBottom = boomRect.bottom;
-            if (
-                boomBottom >= basketTop &&
-                boomTop <= basketBottom &&
-                boomRight >= basketLeft &&
-                boomLeft <= basketRight
-            ) {
-                // Trứng va chạm vào cái giỏ
-                gameover=true
-                basket.remove()
-                scoreLayout.remove()
-                timeLayout.remove()
-                document.querySelector('.gameOver').style.display = "block"
-            } else if (boomTop > gameContainer.clientHeight) {
-                // Trứng rơi xuống dưới màn hình, loại bỏ nó
-                boom.remove();
-            }
-        });
-    }, 20);
-    setTimeout(createBoom, state.speed==0?9500:9500/state.speed);
 }
 
 // Đặt lại vị trí của quả trứng
@@ -268,20 +185,16 @@ let handleTime = setInterval(() => {
             return false
         }
         if(check(time/10)) {
-            state.speed=state.speed+1
+            state.speed=state.speed+0.5
         }
         time=time+1;
         document.querySelector('.time').innerHTML=time
-    }
-    else {
-        eggs.forEach((item)=>{item.remove()})
     }
 }, 1000);
     // let handleMainEgg = setInterval(createEgg, state.speed==0?4000:4000/state.speed);
     createEgg()
     // let handleMainBoom = setInterval(createBoom, state.speed==0?8000:8000/state.speed);
     createBoom()
-    createBoom2()   
 function handlereturn() {
     location.reload()
 }
