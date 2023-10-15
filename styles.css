@@ -1,68 +1,70 @@
 body {
-    background-color: #87CEEB;
-    margin: 0;
-    overflow: hidden;
+  background-color: #87ceeb;
+  margin: 0;
+  overflow: hidden;
 }
 
 .game-container {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    background-color: aqua;
+  position: relative;
+  margin: 0px auto;
+  width: 60%;
+  height: 100vh;
+  background-color: aqua;
 }
 
 .basket {
-    width: 100px;
-    height: 20px;
-    position: absolute;
-    bottom: 70px;
-    left: 50%;
-    transform: translateX(-50%);
+  width: 100px;
+  height: 20px;
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.egg,.boom {
-    width: 50px;
-    height: auto;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    z-index: 0;
-    transform: translateX(-50%);
-    animation: fall 3s linear infinite;
+.egg,
+.boom {
+  width: 50px;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 0;
+  transform: translateX(-50%);
+  animation: fall 3s linear infinite;
 }
 
 @keyframes fall {
-    0% {
-        top: 0;
-    }
-    100% {
-        top: 100vh;
-    }
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 100vh;
+  }
 }
 .gameOver {
-    color: black;
-    font-weight: 700;
-    font-size: 34px;
-    position: absolute;
-    display: none;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    width: 300px;
-    height: 100px;
-    background-color: #fff;
+  color: black;
+  font-weight: 700;
+  font-size: 34px;
+  position: absolute;
+  display: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 100px;
+  background-color: #fff;
 }
 .containerReturnGame {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .icon {
-    z-index: 999;
-    cursor: pointer;
+  z-index: 999;
+  cursor: pointer;
 }
 .basket img {
-    width: 100%;
-    background-color: transparent;
+  width: 100%;
+  background-color: transparent;
 }
